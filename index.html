@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#07070f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f2f3f9" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script src="./assets/thema.js?v=20261024"></script>
+    <link rel="stylesheet" href="./assets/style.css?v=20261024w" />
+    <!-- spielspezifische Styles: das Los, die Rubbelschicht, die Auswahl -->
+    <link rel="stylesheet" href="./spiel.css?v=20261024t" />
+    <link rel="stylesheet" href="./design.css?v=20261024" />
+    <title>Glückslos · Browser-Arcade</title>
+    <meta
+      name="description"
+      content="Glückslos: Rubbellose wie an der Tankstelle, mit Spielgeld. Fünf Lose von Dreierglück bis Goldmine, mit Maus oder Finger freirubbeln. Gewinnchancen und Auszahlungsquote offen erklärt. Ohne Konto und ohne eigene Cookies."
+    />
+  </head>
+  <body style="--ak: var(--gold)">
+    <div class="raster" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Zum Inhalt springen</a>
+    <header class="kopf">
+      <nav class="container nav" aria-label="Hauptnavigation">
+        <a class="marke" href="./"><span class="logo">▶</span>GAMES</a>
+        <div class="nav-links">
+          <a href="./impressum.html">Impressum</a><a href="./datenschutz.html">Datenschutz</a>
+        </div>
+      </nav>
+    </header>
+    <main id="main" class="container">
+      <div class="spiel-kopf">
+        <div>
+          <h1>GLÜCKSLOS</h1>
+          <p class="unterzeile">
+            Rubbellose wie an der Tankstelle: Los aussuchen, kaufen, Silber runterrubbeln.
+          </p>
+          <p class="alters-hinweis">Simuliertes Glücksspiel mit Spielgeld · ab 16</p>
+        </div>
+      </div>
+
+      <div class="hud">
+        <div id="wallet-hud"></div>
+        <div class="hud-feld">
+          <div class="label">Letztes Los</div>
+          <div class="wert" id="hud-letzter">–</div>
+        </div>
+      </div>
+
+      <div class="buehne" id="buehne">
+        <div class="los-wahl" id="los-wahl" role="group" aria-label="Los auswählen"></div>
+        <div class="los-halter">
+          <div class="los" id="los"></div>
+        </div>
+        <div class="gewinn-anzeige" id="gewinn" aria-live="polite"></div>
+        <p class="meldung" id="meldung" data-art="neutral" role="status"></p>
+        <div class="start-zeile">
+          <button class="knopf primaer" id="kaufen" type="button">LOS KAUFEN</button>
+          <button class="knopf" id="alles" type="button" hidden>ALLES AUFDECKEN</button>
+        </div>
+      </div>
+
+      <p class="steuerung">
+        Steuerung: Mit Maus, Finger oder Stift über die silbernen Felder rubbeln. Ist gut die Hälfte
+        frei, fällt der Rest von selbst. Mit der Tastatur: Feld mit <kbd>Tab</kbd> wählen,
+        <kbd>Enter</kbd> oder <kbd>Leertaste</kbd> deckt es auf. Den Ton schaltest du oben rechts
+        um.
+      </p>
+
+      <div class="hinweis hinweis-casino">
+        <strong>Nur Spielgeld</strong> – kein Echtgeld, keine Kaufmöglichkeit. Das Konto teilen sich
+        alle Casino-Spiele dieser Seite und liegt nur in deinem Browser.
+      </div>
+
+      <section class="top-bereich">
+        <h2>Topliste · Größte Gewinne</h2>
+        <p class="klein">
+          Der höchste Netto-Gewinn eines einzelnen Loses (Gewinn minus Preis). Ein Platz wird still
+          eingetragen, ohne Dialog.
+        </p>
+        <div id="topliste"></div>
+        <button class="knopf" id="reset" type="button">Topliste zurücksetzen</button>
+      </section>
+
+      <section class="lernbox">
+        <details open>
+          <summary>Anleitung &amp; Regeln</summary>
+          <p>
+            <strong>Ziel:</strong> Los wählen, kaufen und freirubbeln. Der Preis wird beim Kauf
+            abgebucht, ein Gewinn wird gutgeschrieben, sobald alles aufgedeckt ist.
+          </p>
+          <ul>
+            <li>
+              <strong>Dreierglück (10):</strong> Neun Felder mit Beträgen. Findest du denselben
+              Betrag dreimal, gewinnst du ihn.
+            </li>
+            <li>
+              <strong>Glückszahlen (20):</strong> Oben zwei Gewinnzahlen, unten zehn eigene Zahlen
+              mit je einem Betrag. Jede eigene Zahl, die einer Gewinnzahl gleicht, zahlt ihren
+              Betrag. Zeigt das Bonusfeld ×2, verdoppelt sich der ganze Gewinn.
+            </li>
+            <li>
+              <strong>Glücksklee (25):</strong> Sechs Spiele mit je drei Symbolen und einem Betrag.
+              Drei gleiche Symbole in einem Spiel gewinnen den Betrag dieses Spiels.
+            </li>
+            <li>
+              <strong>Schlag die Bank (30):</strong> Oben die Bankzahl, unten sechs eigene Zahlen
+              mit Beträgen. Jede eigene Zahl, die höher als die Bankzahl ist, gewinnt ihren Betrag.
+            </li>
+            <li>
+              <strong>Goldmine (50):</strong> Drei Stollen mit je einem Fund und einem
+              Multiplikator. Gold zählt mal Multiplikator, Geröll zählt nichts. Alle Stollen werden
+              zusammengezählt, bis zu 20.000.
+            </li>
+            <li>Mehrere Gewinne auf einem Los werden addiert. Gewonnene Felder leuchten auf.</li>
+            <li>
+              Verlässt du die Seite mitten im Rubbeln, wird der Gewinn trotzdem gutgeschrieben, und
+              das Los liegt beim nächsten Besuch noch da.
+            </li>
+            <li>Reicht dein Spielgeld für kein Los mehr (unter 10), gibt es neues Startgeld.</li>
+          </ul>
+          <p><strong>Gewinnplan des gewählten Loses</strong></p>
+          <p class="klein" id="gewinnplan-info"></p>
+          <div class="tabelle-halter">
+            <table class="tabelle" aria-label="Gewinnplan des gewählten Loses">
+              <thead>
+                <tr>
+                  <th scope="col">Gewinn</th>
+                  <th scope="col">Chance</th>
+                </tr>
+              </thead>
+              <tbody id="gewinnplan"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="lernbox">
+        <details>
+          <summary>Wie fair sind die Lose?</summary>
+          <p>
+            Jedes Los hat eine feste Gewinntabelle: wie oft welcher Gewinn vorkommt, gerechnet auf
+            eine Million Lose. Daraus ergeben sich die <strong>Gewinnchance</strong> (wie oft
+            überhaupt etwas herauskommt) und die <strong>Auszahlungsquote</strong> (wie viel vom
+            Preis im Schnitt zurückfließt). Die Tabelle berechnet sich direkt aus denselben Zahlen,
+            mit denen das Spiel zieht.
+          </p>
+          <div class="tabelle-halter">
+            <table class="tabelle" aria-label="Alle Lose im Vergleich">
+              <thead>
+                <tr>
+                  <th scope="col">Los</th>
+                  <th scope="col">Preis</th>
+                  <th scope="col">Gewinnchance</th>
+                  <th scope="col">Auszahlung</th>
+                  <th scope="col">Hauptgewinn</th>
+                </tr>
+              </thead>
+              <tbody id="fair-tabelle"></tbody>
+            </table>
+          </div>
+          <p>
+            <strong>Gewinnchance ist nicht Gewinn.</strong> Bei fast jedem zweiten Los kommt etwas
+            heraus, aber oft nur der Preis selbst oder weniger als das, was man insgesamt bezahlt
+            hat. Echte Lose arbeiten genauso: Viele kleine „Gewinne“ fühlen sich gut an, die
+            Auszahlungsquote liegt trotzdem unter 100 %. Hier liegt sie bei rund 95 bis 96 %, bei
+            echten Losen meist deutlich darunter.
+          </p>
+          <p>
+            <strong>Der Beinahe-Gewinn.</strong> Zwei gleiche Beträge, zwei Kleeblätter, eine Zahl
+            knapp unter der Bank: Das passiert absichtlich oft, weil die Felder so gefüllt werden
+            dürfen. Es ändert an der Chance nichts, fühlt sich aber an wie „fast gewonnen“.
+          </p>
+        </details>
+      </section>
+
+      <section class="lernbox">
+        <details>
+          <summary>Wie funktioniert der Code?</summary>
+          <p>
+            <strong>Erst das Ergebnis, dann das Bild.</strong> Beim Kauf zieht
+            <code>losZiehen()</code> in <code>rubbellos/lose.js</code> einen Eintrag aus der
+            gewichteten Gewinntabelle. Erst danach werden die Felder passend gefüllt: Bei einer
+            Niete gibt es nie drei gleiche Beträge, bei einem Gewinn genau die richtige Kombination.
+            So arbeiten auch echte Lose, deren Ergebnis beim Druck feststeht. Das Rubbeln deckt nur
+            noch auf.
+          </p>
+          <p>
+            <strong>Echter Zufall.</strong> Die Zufallszahlen stammen aus
+            <code>crypto.getRandomValues()</code>. Um eine Zahl von 0 bis n−1 zu bekommen, wird
+            nicht einfach der Rest geteilt (das würde kleine Zahlen leicht bevorzugen), sondern
+            Werte oberhalb des letzten vollen Vielfachen von n werden verworfen und neu gezogen
+            („Rejection Sampling“).
+          </p>
+          <p>
+            <strong>Die Rubbelschicht.</strong> Über jedem Feld liegt ein
+            <code>&lt;canvas&gt;</code> mit Silber-Verlauf und Glitzerpunkten. Beim Rubbeln wird mit
+            <code>globalCompositeOperation = "destination-out"</code> eine dicke runde Linie
+            gezeichnet. Sie malt nicht, sondern radiert. Regelmäßig zählt
+            <code>getImageData()</code> stichprobenartig die durchsichtigen Pixel. Ab der Hälfte
+            fällt die Schicht ganz weg.
+          </p>
+          <p>
+            <strong>Geprüft in Node.</strong> Ein Test zieht eine Million Lose je Sorte und prüft:
+            Das Bild zeigt immer genau den gezogenen Gewinn, nie mehr und nie weniger. Die
+            simulierte Auszahlungsquote passt zur exakt berechneten.
+          </p>
+        </details>
+      </section>
+    </main>
+    <footer class="fuss">
+      <div class="container fuss-in">
+        <span>Browser-Arcade · Open Source</span>
+        <nav aria-label="Rechtliches">
+          <a href="./impressum.html">Impressum</a><a href="./datenschutz.html">Datenschutz</a>
+        </nav>
+      </div>
+    </footer>
+    <script type="module" src="./game.js?v=20261024"></script>
+  </body>
+</html>

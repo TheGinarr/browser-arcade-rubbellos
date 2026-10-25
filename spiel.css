@@ -1,0 +1,389 @@
+/* ============================================================
+   Glückslos · spiel.css — Auswahl, das Los, die Rubbelschicht.
+   ============================================================ */
+
+#wallet-hud {
+  display: contents;
+}
+
+/* ---------- Auswahl der Lose ---------- */
+.los-wahl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.los-wahl-knopf {
+  --f: var(--gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 112px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--txt);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--schnell),
+    box-shadow var(--schnell);
+}
+.wahl-dreier {
+  --f: var(--violet);
+}
+.wahl-zahlen {
+  --f: var(--cyan);
+}
+.wahl-klee {
+  --f: var(--lime);
+}
+.wahl-bank {
+  --f: var(--pink);
+}
+.wahl-gold {
+  --f: var(--gold);
+}
+.los-wahl-knopf .lw-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.los-wahl-knopf .lw-preis {
+  font-family: var(--mono);
+  color: var(--f);
+  font-size: 0.85rem;
+}
+.los-wahl-knopf:hover:not(:disabled),
+.los-wahl-knopf:focus-visible {
+  border-color: var(--f);
+}
+.los-wahl-knopf[aria-pressed="true"] {
+  border-color: var(--f);
+  box-shadow:
+    0 0 0 1px var(--f),
+    0 0 16px color-mix(in srgb, var(--f) 35%, transparent);
+}
+.los-wahl-knopf:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.los-wahl-knopf[aria-pressed="true"]:disabled {
+  opacity: 0.8;
+}
+
+/* ---------- Das Los ---------- */
+.los-halter {
+  display: flex;
+  justify-content: center;
+}
+.los {
+  width: min(100%, 440px);
+  padding: 14px 14px 18px;
+  border-radius: 14px;
+  border: 2px solid var(--ak);
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      color-mix(in srgb, var(--ak) 28%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(160deg, color-mix(in srgb, var(--ak) 22%, #14142a), #0d0d1c 70%);
+  box-shadow: 0 10px 30px #0008;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: box-shadow var(--weich);
+}
+.los-gewonnen {
+  box-shadow:
+    0 0 0 2px var(--ak),
+    0 0 32px color-mix(in srgb, var(--ak) 55%, transparent);
+}
+.los-niete {
+  filter: saturate(0.75);
+}
+.los-muster .rf {
+  pointer-events: none;
+}
+.los-kopf {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.los-name {
+  font-family: var(--pixel);
+  font-size: clamp(0.8rem, 3.4vw, 1rem);
+  color: var(--ak);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--ak) 60%, transparent);
+}
+.los-preis {
+  font-family: var(--mono);
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--ak);
+  color: #0b0b16;
+}
+.los-titel {
+  margin: 10px 0 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mut);
+  text-align: center;
+}
+.los-raster {
+  display: grid;
+  gap: 8px;
+}
+.raster-1 {
+  grid-template-columns: minmax(0, 120px);
+  justify-content: center;
+}
+.raster-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.raster-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.raster-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.raster-stollen {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.raster-2:has(.rf-gewinnzahl) {
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+/* ---------- Ein Rubbelfeld ---------- */
+.rf {
+  position: relative;
+  min-height: 58px;
+  border-radius: 8px;
+  background: #f5f1e6;
+  color: #1b1b2c;
+  overflow: hidden;
+  touch-action: none;
+  outline-offset: 2px;
+}
+.rf:focus-visible {
+  outline: 2px solid var(--ak);
+}
+.rf-inhalt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px;
+  text-align: center;
+  line-height: 1.1;
+}
+.rf-zahl {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.rf-klein {
+  font-size: 0.75rem;
+  color: #5a5a70;
+}
+.rf-nr {
+  font-size: 0.75rem;
+  color: #5a5a70;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.rf-symbole {
+  display: flex;
+  gap: 4px;
+}
+.rf-symbole .symbol {
+  width: 26px;
+  height: 26px;
+}
+.rf-spiel {
+  min-height: 88px;
+}
+.rf-spiel .rf-zahl {
+  font-size: 0.95rem;
+}
+.rf-eigen .rf-zahl {
+  font-size: 1.05rem;
+}
+.rf-gewinnzahl {
+  background: #fff6d6;
+}
+.rf-gewinnzahl .rf-zahl {
+  font-size: 1.4rem;
+}
+.rf-geroell {
+  background: #e2ddd2;
+}
+.rf-multi .rf-zahl {
+  color: #8a5a00;
+}
+.raster-5 .rf {
+  min-height: 52px;
+}
+.raster-5 .rf-zahl {
+  font-size: 0.95rem;
+}
+.raster-5 .rf-klein {
+  font-size: 0.75rem;
+}
+
+/* gewonnene Felder leuchten in der Losfarbe */
+.rf.treffer {
+  background: color-mix(in srgb, var(--ak) 45%, #fff8e0);
+  box-shadow:
+    inset 0 0 0 2px var(--ak),
+    0 0 14px color-mix(in srgb, var(--ak) 70%, transparent);
+}
+
+/* die Rubbelschicht: das globale ".buehne canvas" (pixelig, auto-Höhe) hier überschreiben */
+.buehne .rf canvas.rf-decke {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: auto;
+  cursor: grab;
+  transition: opacity 0.3s ease;
+}
+.buehne .rf canvas.rf-decke.weg {
+  opacity: 0;
+}
+
+/* ---------- Meldung, Knöpfe ---------- */
+.meldung {
+  min-height: 1.6em;
+  margin: 14px 0 0;
+  text-align: center;
+  font-weight: 600;
+}
+[data-art="richtig"] {
+  color: var(--lime);
+}
+[data-art="falsch"] {
+  color: var(--rot);
+}
+[data-art="neutral"] {
+  color: var(--txt);
+}
+.buehne > .gewinn-anzeige {
+  text-align: center;
+  margin-top: 12px;
+}
+.start-zeile {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.start-zeile .knopf {
+  min-width: 200px;
+  font-family: var(--pixel);
+  font-size: 0.8rem;
+  padding: 14px 20px;
+}
+
+/* ---------- Lernbox-Tabellen ---------- */
+.tabelle-halter {
+  overflow-x: auto;
+  margin: 10px 0 16px;
+}
+.tabelle {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 280px;
+}
+.tabelle th,
+.tabelle td {
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+.tabelle th:first-child,
+.tabelle td:first-child {
+  text-align: left;
+}
+.tabelle th {
+  color: var(--ak);
+  font-weight: 600;
+}
+.tabelle td {
+  color: var(--mut);
+  font-family: var(--mono);
+}
+
+@media (max-width: 480px) {
+  .los {
+    padding: 10px 10px 14px;
+  }
+  .los-wahl-knopf {
+    min-width: 0;
+    flex: 1 1 30%;
+    padding: 6px 8px;
+  }
+  .los-raster {
+    gap: 6px;
+  }
+  .raster-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .raster-5 .rf-zahl {
+    font-size: 0.85rem;
+  }
+  .rf-symbole .symbol {
+    width: 22px;
+    height: 22px;
+  }
+  .start-zeile .knopf {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .buehne .rf canvas.rf-decke,
+  .los {
+    transition: none;
+  }
+}
+
+/* .knopf setzt display und würde sonst das hidden-Attribut überstimmen */
+.start-zeile [hidden] {
+  display: none;
+}
+
+/* hell-gen: automatisch erzeugt */
+@media (prefers-color-scheme: light) {
+  :where(:root:not([data-thema="dunkel"])) .los {
+    background:
+      radial-gradient(
+        circle at 15% 0%,
+        color-mix(in srgb, var(--ak) 28%, transparent),
+        transparent 55%
+      ),
+      linear-gradient(160deg, color-mix(in srgb, var(--ak) 22%, #e0e0f0), #eaeaf5 70%);
+  }
+}
+
+:where(:root[data-thema="hell"]) .los {
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      color-mix(in srgb, var(--ak) 28%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(160deg, color-mix(in srgb, var(--ak) 22%, #e0e0f0), #eaeaf5 70%);
+}
